@@ -33,20 +33,22 @@ jobs:
       - name: Run tests with coverage
         run: |
           coverage run -m pytest -v
-      - name: Upload coverage artifact
-        #uses: actions/upload-artifact@v3
-        #with:
-        #  name: coverage
-        #  path: .coverage
-        #  retention-days: 1
+          coverage report -m
         run: |
           echo ".coverage" >> .gitignore || true
           echo "htmlcov/" >> .gitignore || true
 
-  #coverage_report:
-  #  runs-on: ubuntu-latest
-  #  steps:
-  #    - name: "coverage_report"
+  coverage_report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Run coverage report"
+        run: coverage xml -o coverage.xml
+      - name: Upload coverage XML
+        uses: actions/upload-artifact@v3
+        with:
+            name: coverage.xml
+            path: coverage.xml
+            retention-days: 14
 
   #python3 pytest -q tests/integration/test_diffusion2d.py
   #coverage run -m pytest   
