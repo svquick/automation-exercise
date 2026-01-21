@@ -53,6 +53,7 @@ jobs:
         with:
           name: coverage-report
           path: .
+          merge-multiple: true
       - name: Run coverage report
         run: |
           coverage report -m       
