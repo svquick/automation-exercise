@@ -21,27 +21,21 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.9'
-      - name: Install pytest
-        run: python -m pip install --upgrade pip pytest numpy matplotlib coverage
-      - name: Run tests
-        run: python3 -m pytest -v
+      - name: Install dependencies
+        run: pip install pytest numpy matplotlib coverage
       - name: Run tests with coverage
-        run: |
-          coverage run -m pytest -v
-          coverage report -m
-          echo ".coverage" >> .gitignore || true
-          echo "htmlcov/" >> .gitignore || true
+        run: coverage run -m pytest -v
       - name: Upload coverage data
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: .coverage
-          if-no-files-found: error
+          include-hidden-files: true
 
   coverage_report:
     runs-on: ubuntu-latest
@@ -58,14 +52,14 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: coverage-report
-          path: . 
+          path: .
       - name: Run coverage report
         run: |
-          coverage report -m
+          coverage report -m       
           coverage xml -o coverage.xml
       - name: Upload coverage XML
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-xml-artifact
+          name: coverage-xml
           path: coverage.xml
-          retention-days: 14
+          retention-days: 14   
