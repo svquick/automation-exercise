@@ -11,11 +11,13 @@ jobs:
           python-version: '3.9'
       - name: Install Black
         run: python -m pip install --upgrade pip black
-      - name: Run Black
-        run: black --check .
-      - name: Fix formatting with Black
-        if: failure()
-        run: black .
+      - name: Check and auto-fix formatting
+        run: |
+          if ! black --check .; then
+          black .
+          fi
+      - name: Verify formatting
+        run: black --check . 
   #test:
   #  runs-on: ubuntu-latest
   #  steps:
